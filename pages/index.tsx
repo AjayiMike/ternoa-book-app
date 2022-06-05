@@ -1,72 +1,103 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import clsx from "clsx";
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import { MouseEvent, useState } from "react";
+import Book from "../components/Book";
+import styles from "../styles/Home.module.css";
+
+const bookData = [
+  {
+    imgUri: "https://source.unsplash.com/random/50×50/?book",
+    title: "Lorem ipsum dolor sit",
+    description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
+},
+{
+  imgUri: "https://source.unsplash.com/random/50×50/?book",
+  title: "Lorem ipsum dolor sit",
+  description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
+},
+{
+  imgUri: "https://source.unsplash.com/random/50×50/?book",
+  title: "Lorem ipsum dolor sit",
+  description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
+},
+{
+  imgUri: "https://source.unsplash.com/random/50×50/?book",
+  title: "Lorem ipsum dolor sit",
+  description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
+},
+{
+  imgUri: "https://source.unsplash.com/random/50×50/?book",
+  title: "Lorem ipsum dolor sit",
+  description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
+},
+{
+  imgUri: "https://source.unsplash.com/random/50×50/?book",
+  title: "Lorem ipsum dolor sit",
+  description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
+},
+{
+  imgUri: "https://source.unsplash.com/random/50×50/?book",
+  title: "Lorem ipsum dolor sit",
+  description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
+}
+]
 
 const Home: NextPage = () => {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <meta name="description" content="Generated by create next app" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    const tabs = {
+        myBooks: "myBooks",
+        allBooks: "allbooks",
+    };
+    const [activeTab, setActiveTab] = useState(tabs.allBooks);
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+    return (
+        <div className="">
+            <Head>
+                <title>items</title>
+                <meta
+                    name="description"
+                    content="Generated by create next app"
+                />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+            <main className="min-h-fit container mx-auto mt-12 px-4 sm:px-0">
+                <div className="flex gap-6 border-b-2">
+                    <button
+                        onClick={() => setActiveTab(tabs.allBooks)}
+                        id="allbooks"
+                        className={clsx({
+                            "border-b-4 border-black":
+                                activeTab === tabs.allBooks,
+                        })}
+                    >
+                        All books
+                    </button>
+                    <button
+                        onClick={() => setActiveTab(tabs.myBooks)}
+                        id="allbooks"
+                        className={clsx({
+                            "border-b-4 border-black":
+                                activeTab === tabs.myBooks,
+                        })}
+                    >
+                        My books
+                    </button>
+                </div>
+                <div className="grid gap-4 md:grid-cols-2 mt-8 mb-16">
+                  {bookData.map((book, index) => <Book key = {index} {...book} /> )}
+                </div>
+            </main>
         </div>
-      </main>
+    );
+};
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
-    </div>
-  )
-}
-
-export default Home
+export default Home;
