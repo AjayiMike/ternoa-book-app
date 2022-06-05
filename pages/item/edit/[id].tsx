@@ -19,12 +19,9 @@ const EditItem = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
       onDrop,
       maxFiles: 1,
-      accept: {
-        'image/*': ['.jpeg', '.png', '.jpg', '.gif']
-      }
   });
   return (
-      <main className="min-h-fit container mx-auto mt-8 px-4 sm:px-0 mb-16">
+      <main className="min-h-fit container mx-auto max-w-3xl mt-8 px-4 sm:px-0 mb-16">
         <h1 className="text-lg md:text-2xl font-bold mb-6">Edit Book</h1>
         <form>
           <div {...getRootProps()} className="flex justify-center items-center border-2 border-gray-300 border-dashed rounded-2xl py-4 md:py-8 cursor-pointer">
@@ -49,7 +46,7 @@ const EditItem = () => {
               <textarea id = "description" className="block w-full border border-gray-500 h-32 md:h-40 lg:h-52 p-1 rounded" />
             </div>
             <div className="mt-8">
-              <button className="bg-gradient-to-r from-red-500 to-orange-300 p-2 rounded-xl text-white w-full">Edit Book</button>
+              <button className="bg-gradient-to-r from-red-500 to-orange-300 p-4 rounded-lg font-black text-white w-full">Edit Book</button>
             </div>
           </form>
       </main>

@@ -13,7 +13,7 @@ interface Props {
 }
 const Book: FC<Props> = ({ description, imgUri, title }) => {
     return (
-        <div className="w-full p-4 sm:p-6 rounded-md shadow-lg grid grid-cols-12 gap-4 h-52 md:h-56 bg-slate-100 align-bottom hover:shadow-xl transition-all border-l-4 border-orange-400 relative">
+        <div className="w-full p-4 sm:p-6 rounded-md shadow-lg grid grid-cols-12 gap-4 h-52 md:h-56 bg-slate-100 align-bottom hover:shadow-xl transition-all border-l-4 border-gray-400 relative">
             <div className="relative w-full h-full rounded col-span-5 lg:col-span-4">
                 <Image
                     src={imgUri}

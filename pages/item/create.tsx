@@ -9,26 +9,18 @@ const CreateItem = () => {
         const formData = new FormData();
         const [file] = acceptedFiles;
         formData.append("file", file);
-
-        // await fetch("https://httpbin.org/post", {
-        //   method: "POST",
-        //   body: formData
-        // });
     }, []);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        maxFiles: 1,
-        accept: {
-          'image/*': ['.jpeg', '.png', '.jpg', '.gif']
-        }
+        maxFiles: 1
     });
     return (
-        <main className="min-h-fit container mx-auto mt-8 px-4 sm:px-0 mb-16">
+        <main className="min-h-fit container max-w-3xl mx-auto mt-8 px-4 sm:px-0 mb-16">
           <h1 className="text-lg md:text-2xl font-bold mb-6">Add to the list of books you've read</h1>
           <form>
             <div {...getRootProps()} className="flex justify-center items-center border-2 border-gray-300 border-dashed rounded-2xl py-4 md:py-8">
-                <input {...getInputProps()} />
+              <input {...getInputProps()} />
                 {isDragActive ? (
                     <p className="text-center text-sm text-gray-400">Drop the file here ...</p>
                 ) : (
@@ -49,7 +41,7 @@ const CreateItem = () => {
                 <textarea id = "description" className="block w-full border border-gray-500 h-32 md:h-40 lg:h-52 p-1 rounded" />
               </div>
               <div className="mt-4">
-                <button className="bg-gradient-to-r from-red-500 to-orange-300 p-2 rounded-xl text-white w-full">Create</button>
+                <button className="bg-gradient-to-r from-red-500 to-orange-300 p-4 rounded-lg font-black text-white w-full">Create</button>
               </div>
             </form>
         </main>
