@@ -9,7 +9,7 @@ const Header:FC<Props> = ({openWalletModal}) => {
         <header className="bg-black text-white py-4">
             <div className="container mx-auto px-4 sm:px-0  flex justify-between items-center">
                 <Link href="/">
-                    <div>
+                    <div className="cursor-pointer">
                         <span className="block font-black text-3xl bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-orange-300">
                             ternoa
                         </span>
