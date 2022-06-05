@@ -1,5 +1,6 @@
 import { FC, Fragment, ReactNode, useState } from "react"
 import ConnectModal from "./connectModal"
+import DeleteModal from "./DeleteModal"
 import Footer from "./Footer"
 import Header from "./Header"
 
@@ -20,6 +21,12 @@ const Layout:FC<Props> = ({children}) => {
           open = {openWalletModal}
           onClose = {() => setOpenWalletModal(false)}
           label = {"connect wallet modal"}
+        />
+
+        <DeleteModal 
+          open = {false}
+          onClose = {() => setOpenWalletModal(false)}
+          label = {"delete confirmation"}
         />
     </Fragment>
   )
