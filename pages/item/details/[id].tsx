@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { AiOutlineEdit } from "react-icons/ai";
-import { FaRegEye } from "react-icons/fa";
 import { IoTrashOutline } from "react-icons/io5";
 
 const ItemDetails = () => {
