@@ -28,7 +28,7 @@ const Header:FC<Props> = ({openWalletModal}) => {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/item/create">
+                                <Link href="/book/create">
                                     <a>create</a>
                                 </Link>
                             </li>

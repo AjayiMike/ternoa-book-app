@@ -17,7 +17,7 @@ const CustomModalWrapper:FC<Props> = ({open, onClose, label, children}) => {
             onRequestClose={onClose}
             contentLabel={label}
             overlayClassName="fixed inset-0 backdrop-blur-sm z-10"
-            className="absolute w-80 md:w-96 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-black p-6 rounded-xl md:rounded-2xl"
+            className="absolute w-80 md:w-[400px] left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-black p-6 rounded-xl md:rounded-2xl"
         >
             {children}
         </Modal>

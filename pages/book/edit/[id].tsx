@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone';
 import { BiImageAdd } from 'react-icons/bi';
 
-const EditItem = () => {
+const EditBook = () => {
   const onDrop = useCallback(async (acceptedFiles:any) => {
     console.log(acceptedFiles);
     
@@ -53,4 +53,4 @@ const EditItem = () => {
   );
 }
 
-export default EditItem
+export default EditBook

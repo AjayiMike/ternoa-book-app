@@ -1,47 +1,77 @@
-import {useState, createContext, FC, ReactNode} from 'react'
-
-interface Book {
-
-}
+import {
+    useState,
+    createContext,
+    FC,
+    ReactNode,
+    useEffect,
+    useCallback,
+} from "react";
+import { Book } from "../types/apiData";
 
 interface Props {
-    children: ReactNode
+    children: ReactNode;
 }
 
 interface Context {
-    books: Book[],
+    books: Book[];
     updateBooks: (bookArray: Book[]) => void;
-    currentBook: Book | null
-    selectBook: (id: string) => void;
+    seletedBookId: string | null;
+    selectBook: (id: string | null) => void;
+    loading: boolean;
 }
 
 const defaultValue = {
     books: [],
     updateBooks: (bookArray: Book[]) => {},
-    currentBook: null,
-    selectBook: (id: string) => {},
-} 
+    seletedBookId: null,
+    selectBook: (id: string | null) => {},
+    loading: true,
+};
 
 export const AppContext = createContext<Context>(defaultValue);
 
-const AppContextProvider:FC<Props> = ({children}: Props) => {
+const AppContextProvider: FC<Props> = ({ children }: Props) => {
     const [books, setBooks] = useState<Book[]>([]);
-    const [seletedBookId, setSeletedBookId] = useState<Book | null>(null);
+    const [seletedBookId, setSeletedBookId] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
-    const updateBooks = (bookArray: Book[]) => {
-        setBooks(prev => [...prev, ...bookArray])
-    }
+    const updateBooks = useCallback((bookArray: Book[]) => {
+        setBooks((prev) => [...prev, ...bookArray]);
+    }, []);
 
-    const selectBook = (id: string) => {
-        setSeletedBookId(id)
-    }
+    const selectBook = useCallback((id: string | null) => {
+        setSeletedBookId(() => id);
+    }, []);
 
-    return(
-        <AppContext.Provider value={{books, updateBooks, currentBook:seletedBookId, selectBook}}>
+    const initFunction = useCallback(async () => {
+        try {
+            const res = await fetch("/api/books");
+
+            if (res.status !== 200) {
+                setBooks([]);
+                setLoading(false);
+                return;
+            }
+            const parsedResponse = await res.json();
+            setBooks(parsedResponse.books);
+            setLoading(false);
+            console.log("fetched!!!!");
+        } catch (error) {
+            console.log;
+        }
+    }, []);
+
+    useEffect(() => {
+        initFunction();
+    }, []);
+
+    return (
+        <AppContext.Provider
+            value={{ books, updateBooks, seletedBookId, selectBook, loading }}
+        >
             {children}
         </AppContext.Provider>
     );
-    
-}
+};
 
-export default AppContextProvider
+export default AppContextProvider;

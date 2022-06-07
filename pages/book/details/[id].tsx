@@ -4,7 +4,8 @@ import React from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { IoTrashOutline } from "react-icons/io5";
 
-const ItemDetails = () => {
+const BookDetails = () => {
+
     return (
         <main className="min-h-fit sm:px-0">
             <div className="relative w-full h-32 md:h-44 bg-gradient-to-r from-orange-300 to-red-500 flex justify-center items-center">
@@ -47,7 +48,7 @@ const ItemDetails = () => {
                         saepe?
                     </p>
                     <div className="flex items-center ml-auto mt-16 w-24">
-                    <Link href = "/item/edit/id">
+                    <Link href = "/book/edit/id">
                         <a>
                             <AiOutlineEdit className="mr-8 cursor-pointer" />
                         </a>
@@ -61,5 +62,4 @@ const ItemDetails = () => {
         </main>
     );
 };
-
-export default ItemDetails;
+export default BookDetails;

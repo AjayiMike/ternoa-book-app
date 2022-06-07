@@ -2,54 +2,12 @@ import clsx from "clsx";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useContext, useState } from "react";
 import Book from "../components/Book";
+import { AppContext } from "../contexts/appContext";
 import styles from "../styles/Home.module.css";
 
-const bookData = [
-  {
-    imgUri: "https://source.unsplash.com/random/50×50/?book",
-    title: "Lorem ipsum dolor sit",
-    description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
-},
-{
-  imgUri: "https://source.unsplash.com/random/50×50/?book",
-  title: "Lorem ipsum dolor sit",
-  description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
-},
-{
-  imgUri: "https://source.unsplash.com/random/50×50/?book",
-  title: "Lorem ipsum dolor sit",
-  description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
-},
-{
-  imgUri: "https://source.unsplash.com/random/50×50/?book",
-  title: "Lorem ipsum dolor sit",
-  description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
-},
-{
-  imgUri: "https://source.unsplash.com/random/50×50/?book",
-  title: "Lorem ipsum dolor sit",
-  description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
-},
-{
-  imgUri: "https://source.unsplash.com/random/50×50/?book",
-  title: "Lorem ipsum dolor sit",
-  description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
-},
-{
-  imgUri: "https://source.unsplash.com/random/50×50/?book",
-  title: "Lorem ipsum dolor sit",
-  description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, est vitae. Facere libero vero ut reprehenderit dolorum voluptas labore, quae dicta. Rerum et adipisci ipsa, delectus assumenda temporibus a itaque, incidunt eveniet fugit aperiam id facilis optio consequatur repudiandae cupiditate neque ullam? Itaque, impedit quibusdam? Eius animi voluptatem doloribus incidunt natus distinctio cum quisquam repudiandae nobis libero. Adipisci commodi obcaecati illum ad explicabo fugiat numquam nulla architecto eligendi vel. Quibusdam tempora necessitatibus iste facere culpa temporibus. Esse cumque corrupti reiciendis aperiam, praesentium illum explicabo inventore sint, voluptatem debitis aspernatur? Iusto at ullam voluptates assumenda ab alias animi voluptatibus pariatur velit.",
-}
-]
+// ipfs gateway:: https://gateway.ipfs.io/
 
 const Home: NextPage = () => {
     const tabs = {
@@ -58,10 +16,12 @@ const Home: NextPage = () => {
     };
     const [activeTab, setActiveTab] = useState(tabs.allBooks);
 
+    const {books, loading} = useContext(AppContext)
+
     return (
         <div className="">
             <Head>
-                <title>items</title>
+                <title>Books</title>
                 <meta
                     name="description"
                     content="Generated by create next app"
@@ -93,7 +53,9 @@ const Home: NextPage = () => {
                     </button>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2 mt-8 mb-16">
-                  {bookData.map((book, index) => <Book key = {index} {...book} /> )}
+                    {loading ? <p>loading...</p> : (
+                        books.length ? books.map((book, index) => <Book key = {index} {...book} />) : <p>No Book to display</p>
+                    )}
                 </div>
             </main>
         </div>

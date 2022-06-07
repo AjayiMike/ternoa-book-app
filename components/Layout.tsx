@@ -1,4 +1,5 @@
-import { FC, Fragment, ReactNode, useState } from "react"
+import { FC, Fragment, ReactNode, useContext, useEffect, useState } from "react"
+import { AppContext } from "../contexts/appContext"
 import ConnectModal from "./connectModal"
 import DeleteModal from "./DeleteModal"
 import Footer from "./Footer"
@@ -11,6 +12,10 @@ interface Props {
 const Layout:FC<Props> = ({children}) => {
 
   const [openWalletModal, setOpenWalletModal] = useState(false)
+
+  const {seletedBookId, selectBook} = useContext(AppContext)
+  
+
   return (
     <Fragment>
         <Header openWalletModal = {() => setOpenWalletModal(true)}/>
@@ -24,8 +29,8 @@ const Layout:FC<Props> = ({children}) => {
         />
 
         <DeleteModal 
-          open = {false}
-          onClose = {() => setOpenWalletModal(false)}
+          open = {!!seletedBookId}
+          onClose = {() => selectBook(null)}
           label = {"delete confirmation"}
         />
     </Fragment>
