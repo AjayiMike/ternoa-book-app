@@ -2,16 +2,20 @@ import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import {BiImageAdd} from 'react-icons/bi'
-import { create } from 'ipfs-http-client';
-
-const ipfs = create({host: 'ipfs.infura.io', port: 5001, protocol: 'https'});
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import clsx from "clsx";
+import ipfs from "../../utils/ipfs"
 
 const CreateBook = () => {
+
+  const router = useRouter()
   const [seletedImage, setSeletedImage] = useState<any>(null)
   const [title, setTitle] = useState<string>("")
   const [description, setdescription] = useState<string>("")
   const [seletedImagePreviewSrc, setSeletedImagePreviewSrc] = useState<any>(null)
   const [imageAreaText, setImageAreaText] = useState("Drag 'n' drop the book cover here, or click to select files")
+  const [processing, setProcessing] = useState<boolean>(false)
     const onDrop = useCallback(async (acceptedFiles:any) => {
       const reader = new FileReader()
       reader.onabort = () => console.log('file reading was aborted')
@@ -46,12 +50,13 @@ const CreateBook = () => {
 
     const onSubmit = async (e: any) => {
       e.preventDefault();
-      if(!setSeletedImage || !title || !description) return;
+      if(!setSeletedImage || !title || !description) return toast('No field should be empty!');
 
+      setProcessing(true)
       try {
         const res = await ipfs.add(seletedImage);
         if(!res.path) throw "an error occured"
-        const serverRes = await fetch("/api/book/upload", {
+        const serverRes = await fetch("/api/books/upload", {
           method: "POST",
           body: JSON.stringify({
             title,
@@ -60,10 +65,16 @@ const CreateBook = () => {
             ownerAddress: "0x",
           })
         })
-        const parsedRes = await serverRes.json()
-        console.log("serverRes: ", parsedRes);
+        if(serverRes.status !== 200)
+        return toast('Something went wrong! Please try again');
+
+        toast('Book added successfully');
+        router.push("/")
       } catch (error) {
-        console.log(error);
+        console.error(error);
+        return toast('Something went wrong! Please try again');
+      } finally {
+        setProcessing(false)
       }
       
     }
@@ -96,7 +107,7 @@ const CreateBook = () => {
                 <textarea id = "description" className="block w-full border border-gray-500 h-32 md:h-40 lg:h-52 p-1 rounded" value={description} onChange = {(e) => setdescription(e.target.value)} />
               </div>
               <div className="mt-4">
-                <button className="bg-gradient-to-r from-red-500 to-orange-300 p-4 rounded-lg font-black text-white w-full">Create</button>
+                <button className = {clsx({"bg-gradient-to-r from-red-500 to-orange-300 p-4 rounded-lg font-black text-white w-full": true, "from-gray-400 to-gray-300": processing})} disabled = {processing}>{processing ? "Creating..." : "Create"}</button>
               </div>
             </form>
         </main>

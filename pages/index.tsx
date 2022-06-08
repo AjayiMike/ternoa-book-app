@@ -1,25 +1,63 @@
 import clsx from "clsx";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import { MouseEvent, useContext, useState } from "react";
+import { Fragment, MouseEvent, useCallback, useEffect, useState } from "react";
 import Book from "../components/Book";
-import { AppContext } from "../contexts/appContext";
-import styles from "../styles/Home.module.css";
+import DeleteModal from "../components/DeleteModal";
+import { Book as BookType } from "../types/apiData";
+import { toast } from 'react-toastify';
 
 // ipfs gateway:: https://gateway.ipfs.io/
 
-const Home: NextPage = () => {
+interface Props {
+    books: BookType[]
+}
+
+const Home: NextPage<Props> = ({books}) => {
     const tabs = {
         myBooks: "myBooks",
         allBooks: "allbooks",
     };
+    const [bookState, setBookState] = useState(books);
     const [activeTab, setActiveTab] = useState(tabs.allBooks);
+    const [idTobeDeleted, setIdTobeDeleted] = useState<string | null>(null)
+    const [bookTitleToBeDeleted, setBookTitleToBeDeleted] = useState<string | null>(null)
 
-    const {books, loading} = useContext(AppContext)
+    useEffect(() => {
+      if(!idTobeDeleted)
+      return setBookTitleToBeDeleted(null)
+
+      const bookToBeDeleted = books.find(book => book._id === idTobeDeleted);
+      setBookTitleToBeDeleted(() => bookToBeDeleted!.title)
+    }, [idTobeDeleted])
+
+
+    const deleteBook = useCallback(async () => {
+        if(!idTobeDeleted) return;
+        
+        try {
+            const deletedRes = await fetch("/api/books/delete", {
+                method: "DELETE",
+                body: JSON.stringify({id: idTobeDeleted})
+            })            
+    
+            if(deletedRes.status !== 200)
+            return toast("something went wrong! Please try again")
+            const filteredBooks = bookState.filter(book => book._id !== idTobeDeleted)
+            setBookState(() => filteredBooks)
+            setIdTobeDeleted(() => null);
+            setBookTitleToBeDeleted(() => null)
+            toast(`sucessfully deleted the book titled ${bookTitleToBeDeleted}`)
+        } catch (error) {
+            console.error("error deleting book: ", error);
+            toast("something went wrong! Please try again")
+        }
+        
+        
+    }, [idTobeDeleted, bookTitleToBeDeleted])    
 
     return (
-        <div className="">
+        <Fragment>
             <Head>
                 <title>Books</title>
                 <meta
@@ -53,13 +91,30 @@ const Home: NextPage = () => {
                     </button>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2 mt-8 mb-16">
-                    {loading ? <p>loading...</p> : (
-                        books.length ? books.map((book, index) => <Book key = {index} {...book} />) : <p>No Book to display</p>
-                    )}
+                    {
+                        bookState.length ? bookState.map((book, index) => <Book key = {index} {...book} onDeleteClick = {setIdTobeDeleted} />) : <p>No Books to display</p>
+                    }
                 </div>
             </main>
-        </div>
+
+            <DeleteModal
+                open = {!!idTobeDeleted && !!bookTitleToBeDeleted}
+                onClose = {() => setIdTobeDeleted(null)}
+                label = {"delete confirmation"}
+                bookTitle = {bookTitleToBeDeleted}
+                deleteHandler = {deleteBook}
+            />
+        </Fragment>
     );
 };
+
+export const getServerSideProps = async (context: any) => {
+    const host = context.req.headers.host;
+    const booksEndpoint = host.startsWith('localhost') || host.startsWith('192') ? `http://${host}/api/books` : `https://${host}/api/books`;
+    const res = await fetch(booksEndpoint);
+    const parsedResponse = await res.json();
+    
+    return {props: {books: parsedResponse.books}}
+}
 
 export default Home;

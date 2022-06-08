@@ -1,25 +1,30 @@
-import { FC, useContext, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { CgCloseR } from "react-icons/cg"
-import { AppContext } from "../contexts/appContext"
-import { Book } from "../types/apiData"
 import CustomModalWrapper from "./customModalWrapper"
+import { toast } from 'react-toastify';
+import { NextPage } from "next";
 
 interface Props {
     open: boolean,
     onClose: ()=>void,
-    label:string
+    label:string,
+    bookTitle: string | null,
+    deleteHandler: () => void,
 }
 
-const DeleteModal:FC<Props> = ({open, onClose, label}) => {
+const DeleteModal:NextPage<Props> = ({open, onClose, label, bookTitle, deleteHandler}) => {
 
-const {books, seletedBookId} = useContext(AppContext)
+    const [inputValue, setInputValue] = useState<string>("")
 
-const [book, setBook] = useState<Book | null>()
-
-useEffect(() => {
-  const book = books.find(book => book._id === seletedBookId)
-  setBook(book)
-}, [seletedBookId])
+    const handleDelete = useCallback(async (e: any) => {
+        e.preventDefault();
+        if(inputValue !== bookTitle)
+            return toast("type in the title correctly")
+        console.log("before");
+        await deleteHandler()
+        console.log("after");
+        
+    },[inputValue, bookTitle]);
 
   return (
     <CustomModalWrapper
@@ -39,9 +44,9 @@ useEffect(() => {
                     onClick={onClose}
                 />
             </div>
-            <form className="mt-4">
-                <p className="text-white mb-7">To confirm delete, please type <code className="bg-gray-600 p-1 rounded-sm whitespace-nowrap">{book?.title}</code> in the input below</p>
-                <input type = "text" className="w-full py-2 px-3 block mt-4" autoFocus/>
+            <form className="mt-4" onSubmit={handleDelete}>
+                <p className="text-white mb-7">To confirm delete, please type <code className="bg-gray-600 p-1 rounded-sm">{bookTitle}</code> in the input below</p>
+                <input type = "text" className="w-full py-2 px-3 block mt-4" value={inputValue} onChange = {(e:any) => setInputValue(e.target.value)} autoFocus/>
                 <button className="w-full p-3 block bg-gradient-to-r from-red-500 to-orange-300 rounded text-white mt-4">Confirm delete</button>
             </form>
     </CustomModalWrapper>

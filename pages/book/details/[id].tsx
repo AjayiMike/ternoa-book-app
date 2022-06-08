@@ -1,10 +1,36 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { IoTrashOutline } from "react-icons/io5";
+import { useRouter } from "next/router";
+import { Book } from "../../../types/apiData";
 
 const BookDetails = () => {
+
+    const router = useRouter()
+
+    const { id } = router.query;
+
+    const [book, setBook] = useState<Book | null>(null);
+
+
+    const init = async () => {
+        try {
+            const bookRes = await fetch(`/api/books/${id}`);
+            if (bookRes.status !== 200) return router.push("/");
+            const parsedRes = await bookRes.json();
+            setBook(parsedRes.book);
+        } catch (error) {
+            console.error(error);
+            return router.push("/")
+        }
+    };
+
+    useEffect(() => {
+      init()
+    }, [id])
+    
 
     return (
         <main className="min-h-fit sm:px-0">
@@ -12,7 +38,7 @@ const BookDetails = () => {
                 <div className="mb-8 md:mb-0">
                     <span>title: </span>
                     <h1 className="text-xl md:text-3xl font-black uppercase">
-                        Book title here
+                        {book?.title}
                     </h1>
                 </div>
             </div>
@@ -20,7 +46,7 @@ const BookDetails = () => {
                 <div className="relative bottom-12 flex">
                     <div className="relative left-4 sm:left-0 w-32 h-40 md:w-44 md:h-52 rounded-2xl border-4 border-white">
                         <Image
-                            src={`https://source.unsplash.com/random/50×50/?book`}
+                            src={`https://gateway.ipfs.io/ipfs/${book?.coverImageIpfsPath}`}
                             layout="fill"
                             className="rounded-2xl"
                         />
@@ -28,7 +54,7 @@ const BookDetails = () => {
 
                     <div className="mt-auto ml-10">
                         <p className="font-bold text-base">
-                            <span className="font-light">Owned by: </span>You
+                            <span className="font-light">Owned by: </span>{book?.ownerAddress}
                         </p>
                         <p className="font-bold text-base">
                             <span className="font-light">Created on: </span>23
@@ -38,14 +64,7 @@ const BookDetails = () => {
                 </div>
                 <div className="px-4 sm:px-0 mb-16 relative">
                     <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Pariatur aliquam tenetur, odit voluptatum quos
-                        repudiandae facere provident in accusantium quae tempore
-                        quas praesentium saepe eveniet dicta nulla itaque optio
-                        perspiciatis deserunt expedita aperiam? Aliquid id nihil
-                        nemo incidunt in aut explicabo, facere recusandae quis
-                        accusamus deleniti voluptate ea ad laborum porro ut,
-                        saepe?
+                        {book?.description}
                     </p>
                     <div className="flex items-center ml-auto mt-16 w-24">
                     <Link href = "/book/edit/id">

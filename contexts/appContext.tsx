@@ -43,27 +43,27 @@ const AppContextProvider: FC<Props> = ({ children }: Props) => {
         setSeletedBookId(() => id);
     }, []);
 
-    const initFunction = useCallback(async () => {
-        try {
-            const res = await fetch("/api/books");
+    // const initFunction = useCallback(async () => {
+    //     try {
+    //         const res = await fetch("/api/books");
 
-            if (res.status !== 200) {
-                setBooks([]);
-                setLoading(false);
-                return;
-            }
-            const parsedResponse = await res.json();
-            setBooks(parsedResponse.books);
-            setLoading(false);
-            console.log("fetched!!!!");
-        } catch (error) {
-            console.log;
-        }
-    }, []);
+    //         if (res.status !== 200) {
+    //             setBooks([]);
+    //             setLoading(false);
+    //             return;
+    //         }
+    //         const parsedResponse = await res.json();
+    //         setBooks(parsedResponse.books);
+    //         setLoading(false);
+    //         console.log("fetched!!!!");
+    //     } catch (error) {
+    //         console.log;
+    //     }
+    // }, []);
 
-    useEffect(() => {
-        initFunction();
-    }, []);
+    // useEffect(() => {
+    //     initFunction();
+    // }, []);
 
     return (
         <AppContext.Provider

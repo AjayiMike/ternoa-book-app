@@ -1,9 +1,10 @@
 import { FC, Fragment, ReactNode, useContext, useEffect, useState } from "react"
 import { AppContext } from "../contexts/appContext"
 import ConnectModal from "./connectModal"
-import DeleteModal from "./DeleteModal"
 import Footer from "./Footer"
 import Header from "./Header"
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Props {
     children: ReactNode
@@ -12,8 +13,6 @@ interface Props {
 const Layout:FC<Props> = ({children}) => {
 
   const [openWalletModal, setOpenWalletModal] = useState(false)
-
-  const {seletedBookId, selectBook} = useContext(AppContext)
   
 
   return (
@@ -28,11 +27,15 @@ const Layout:FC<Props> = ({children}) => {
           label = {"connect wallet modal"}
         />
 
-        <DeleteModal 
-          open = {!!seletedBookId}
-          onClose = {() => selectBook(null)}
-          label = {"delete confirmation"}
-        />
+    <ToastContainer 
+      position="bottom-right"
+      hideProgressBar={true}
+      newestOnTop={false}
+      closeOnClick
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+    />
     </Fragment>
   )
 }

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { FC, useContext } from "react";
+import React, { Dispatch, FC, SetStateAction, useContext } from "react";
 import { shortenText } from "../utils/helpers";
 import {FaRegEye} from 'react-icons/fa'
 import {AiOutlineEdit} from 'react-icons/ai'
@@ -9,10 +9,9 @@ import {Book as BookType} from '../types/apiData'
 import { AppContext } from "../contexts/appContext";
 
 interface Props extends BookType{
+    onDeleteClick: Dispatch<SetStateAction<string | null>>
 }
-const Book: FC<Props> = ({ description, coverImageIpfsPath, title, _id }) => {
-
-    const {selectBook} = useContext(AppContext)
+const Book: FC<Props> = ({ description, coverImageIpfsPath, title, _id, onDeleteClick}) => {
     return (
         <div className="w-full p-4 sm:p-6 rounded-md shadow-lg grid grid-cols-12 gap-4 h-52 md:h-56 bg-slate-100 align-bottom hover:shadow-xl transition-all border-l-4 border-gray-400 relative">
             <div className="relative w-full h-full rounded col-span-5 lg:col-span-4">
@@ -36,7 +35,7 @@ const Book: FC<Props> = ({ description, coverImageIpfsPath, title, _id }) => {
                             <AiOutlineEdit className="mr-8 cursor-pointer" />
                         </a>
                     </Link>
-                    <button onClick = {() => selectBook(_id)}>
+                    <button onClick = {() => onDeleteClick(_id)}>
                         <IoTrashOutline className = "cursor-pointer" />
                     </button>
                 </div>

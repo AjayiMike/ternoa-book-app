@@ -1,7 +1,14 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import { NextApiRequest, NextApiResponse } from 'next';
 
+const connectDB = (handler:any) => async (req:NextApiRequest, res:NextApiResponse) => {
+  if (mongoose.connections[0].readyState) {
+    // Use current db connection
+    return handler(req, res);
+  }
+  // Use new db connection
+  await mongoose.connect(process.env.db_connection_string as string);
+  return handler(req, res);
+};
 
-
-export default async (cb: (err: any) => void) => {
-   return mongoose.connect(process.env.db_connection_string as string, cb)
-}
+export default connectDB;
