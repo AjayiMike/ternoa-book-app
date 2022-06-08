@@ -12,11 +12,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     if (req.method !== "GET") return res.status(405);
 
     const { slug } = req.query;
-
+    
     try {
         const book = await Book.findOne({ _id: slug });
+        
         return res.status(200).json({ book });
-    } catch (error) {
+    } catch (error) {        
         return res
             .status(500)
             .json({ message: "something went wrong, cannot get books" });

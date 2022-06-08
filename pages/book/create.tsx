@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 import ipfs from "../../utils/ipfs"
+import { useWeb3React } from "@web3-react/core";
 
 const CreateBook = () => {
 
@@ -39,6 +40,8 @@ const CreateBook = () => {
         maxFiles: 1
     });
 
+    const {active, account} = useWeb3React()
+
     useEffect(() => {
 
       if(isDragActive) return setImageAreaText("Drop the file here ...")
@@ -51,6 +54,7 @@ const CreateBook = () => {
     const onSubmit = async (e: any) => {
       e.preventDefault();
       if(!setSeletedImage || !title || !description) return toast('No field should be empty!');
+      if(!active || !account) return toast('Please connect your wallet to create a book');
 
       setProcessing(true)
       try {
@@ -62,7 +66,7 @@ const CreateBook = () => {
             title,
             description,
             ipfsPath: res.path,
-            ownerAddress: "0x",
+            ownerAddress: account,
           })
         })
         if(serverRes.status !== 200)

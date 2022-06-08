@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
-import { IoTrashOutline } from "react-icons/io5";
 import { useRouter } from "next/router";
 import { Book } from "../../../types/apiData";
+import ErrorPage from 'next/error'
 
 const BookDetails = () => {
 
@@ -14,22 +14,37 @@ const BookDetails = () => {
 
     const [book, setBook] = useState<Book | null>(null);
 
+    const [error, setError] = useState<{statusCode: number | null, isError:boolean}>({statusCode: null, isError: false})
 
-    const init = async () => {
+
+    const init = useCallback(async () => {
+        if(!id) return;
         try {
             const bookRes = await fetch(`/api/books/${id}`);
-            if (bookRes.status !== 200) return router.push("/");
+        
+            if (bookRes.status !== 200) return setError({
+                isError: true,
+                statusCode: bookRes.status
+            })
             const parsedRes = await bookRes.json();
+            if(parsedRes.book === null) return setError({
+                isError: true,
+                statusCode: 404
+            })
             setBook(parsedRes.book);
         } catch (error) {
-            console.error(error);
-            return router.push("/")
+            return setError({
+                isError: true,
+                statusCode: 500
+            })
         }
-    };
+    }, [id]);
 
     useEffect(() => {
       init()
     }, [id])
+
+    if(error.isError) return <ErrorPage statusCode={error.statusCode as number} />
     
 
     return (
@@ -42,14 +57,14 @@ const BookDetails = () => {
                     </h1>
                 </div>
             </div>
-            <div className="container mx-auto">
+            {<div className="container mx-auto">
                 <div className="relative bottom-12 flex">
-                    <div className="relative left-4 sm:left-0 w-32 h-40 md:w-44 md:h-52 rounded-2xl border-4 border-white">
-                        <Image
+                    <div className="relative left-4 sm:left-0 w-40 h-44 md:w-52 md:h-56 rounded-2xl border-4 border-white">
+                        {book?.coverImageIpfsPath && <Image
                             src={`https://gateway.ipfs.io/ipfs/${book?.coverImageIpfsPath}`}
                             layout="fill"
                             className="rounded-2xl"
-                        />
+                        />}
                     </div>
 
                     <div className="mt-auto ml-10">
@@ -66,18 +81,15 @@ const BookDetails = () => {
                     <p>
                         {book?.description}
                     </p>
-                    <div className="flex items-center ml-auto mt-16 w-24">
-                    <Link href = "/book/edit/id">
+                    <div className="mt-12">
+                    <Link href = {`/book/edit/${book?._id}`}>
                         <a>
-                            <AiOutlineEdit className="mr-8 cursor-pointer" />
+                            <AiOutlineEdit className="cursor-pointer text-3xl" />
                         </a>
                     </Link>
-                    <button>
-                        <IoTrashOutline className = "cursor-pointer" />
-                    </button>
                 </div>
                 </div>
-            </div>
+            </div>}
         </main>
     );
 };

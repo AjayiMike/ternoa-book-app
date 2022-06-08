@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { CgCloseR } from "react-icons/cg"
 import CustomModalWrapper from "./customModalWrapper"
 import { toast } from 'react-toastify';
@@ -20,11 +20,11 @@ const DeleteModal:NextPage<Props> = ({open, onClose, label, bookTitle, deleteHan
         e.preventDefault();
         if(inputValue !== bookTitle)
             return toast("type in the title correctly")
-        console.log("before");
-        await deleteHandler()
-        console.log("after");
+        deleteHandler()
+        setInputValue("");
         
-    },[inputValue, bookTitle]);
+    },[inputValue, bookTitle])
+    
 
   return (
     <CustomModalWrapper

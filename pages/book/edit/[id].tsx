@@ -7,6 +7,8 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import ipfs from "../../../utils/ipfs"
 import clsx from "clsx";
+import { useWeb3React } from "@web3-react/core";
+import ErrorPage from 'next/error'
 
 const EditBook = () => {
     const router = useRouter();
@@ -35,6 +37,8 @@ const EditBook = () => {
         maxFiles: 1,
     });
 
+    const {active, account} = useWeb3React()
+
     const [currentBook, setCurrentBook] = useState<Book | null>(null);
     const [imageAreaText, setImageAreaText] = useState(
         "Drag 'n' drop the book cover here, or click to select files"
@@ -45,19 +49,38 @@ const EditBook = () => {
     const [title, setTitle] = useState<string>("")
   const [description, setDescription] = useState<string>("")
   const [processing, setProcessing] = useState<boolean>(false)
+  const [error, setError] = useState<{statusCode: number | null, isError:boolean}>({statusCode: null, isError: false})
 
     const init = async () => {
+        if(!active || !account) {
+             toast('Wallet not connected');
+             return router.push("/")
+        }
         try {
             const bookRes = await fetch(`/api/books/${id}`);
-            if (bookRes.status !== 200) return router.push("/");
+            if (bookRes.status !== 200) return setError({
+                isError: true,
+                statusCode: bookRes.status
+            })
             const parsedRes = await bookRes.json();
+            if(parsedRes.book === null) return setError({
+                isError: true,
+                statusCode: 404
+            })
+
+            if(parsedRes.book.ownerAddress !== account) {
+                toast('You can not update a book that is not created by you!');
+                return router.push("/")
+            }
             setCurrentBook(parsedRes.book);
             setSeletedImagePreviewSrc(`https://gateway.ipfs.io/ipfs/${parsedRes.book.coverImageIpfsPath}`)
             setTitle(parsedRes.book.title)
             setDescription(parsedRes.book.description)
         } catch (error) {
-            console.error(error);
-            return router.push("/")
+            return setError({
+                isError: true,
+                statusCode: 500
+            })
         }
     };
     useEffect(() => {
@@ -82,14 +105,10 @@ const EditBook = () => {
         let newImgPath;
         if(seletedImage) {
           const res = await ipfs.add(seletedImage);
-          console.log("before!");
-          
           if(!res.path) throw "an error occured"
 
           newImgPath = res.path;
         }
-
-        console.log("after!");
         const serverRes = await fetch("/api/books/update", {
           method: "PUT",
           body: JSON.stringify({
@@ -113,6 +132,8 @@ const EditBook = () => {
       }
       
     }
+
+    if(error.isError) return <ErrorPage statusCode={error.statusCode as number} />
 
     return (
         <main className="min-h-fit container mx-auto max-w-3xl mt-8 px-4 sm:px-0 mb-16">
