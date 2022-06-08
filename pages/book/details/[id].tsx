@@ -5,6 +5,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { Book } from "../../../types/apiData";
 import ErrorPage from 'next/error'
+import { useWeb3React } from "@web3-react/core";
 
 const BookDetails = () => {
 
@@ -42,7 +43,9 @@ const BookDetails = () => {
 
     useEffect(() => {
       init()
-    }, [id])
+    }, [id, init])
+
+    const {account} = useWeb3React()
 
     if(error.isError) return <ErrorPage statusCode={error.statusCode as number} />
     
@@ -61,6 +64,7 @@ const BookDetails = () => {
                 <div className="relative bottom-12 flex">
                     <div className="relative left-4 sm:left-0 w-40 h-44 md:w-52 md:h-56 rounded-2xl border-4 border-white">
                         {book?.coverImageIpfsPath && <Image
+                            alt = "Book cover"
                             src={`https://gateway.ipfs.io/ipfs/${book?.coverImageIpfsPath}`}
                             layout="fill"
                             className="rounded-2xl"
@@ -69,11 +73,10 @@ const BookDetails = () => {
 
                     <div className="mt-auto ml-10">
                         <p className="font-bold text-base">
-                            <span className="font-light">Owned by: </span>{book?.ownerAddress}
+                            <span className="font-light">Owned by: </span>{account && account === book?.ownerAddress ? "You": book?.ownerAddress}
                         </p>
                         <p className="font-bold text-base">
-                            <span className="font-light">Created on: </span>23
-                            October 2009
+                            <span className="font-light">Created on: </span>
                         </p>
                     </div>
                 </div>
@@ -82,11 +85,11 @@ const BookDetails = () => {
                         {book?.description}
                     </p>
                     <div className="mt-12">
-                    <Link href = {`/book/edit/${book?._id}`}>
+                    {account && account === book?.ownerAddress && <Link href = {`/book/edit/${book?._id}`}>
                         <a>
                             <AiOutlineEdit className="cursor-pointer text-3xl" />
                         </a>
-                    </Link>
+                    </Link>}
                 </div>
                 </div>
             </div>}

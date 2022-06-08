@@ -23,7 +23,7 @@ const DeleteModal:NextPage<Props> = ({open, onClose, label, bookTitle, deleteHan
         deleteHandler()
         setInputValue("");
         
-    },[inputValue, bookTitle])
+    },[inputValue, bookTitle, deleteHandler])
     
 
   return (

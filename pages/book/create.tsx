@@ -86,7 +86,7 @@ const CreateBook = () => {
 
     return (
         <main className="min-h-fit container max-w-3xl mx-auto mt-8 px-4 sm:px-0 mb-16">
-          <h1 className="text-lg md:text-2xl font-bold mb-6">Add to the list of books you've read</h1>
+          <h1 className="text-lg md:text-2xl font-bold mb-6">Add to the list of books you&apos;ve read</h1>
           <form onSubmit={onSubmit}>
             <div {...getRootProps()} className="flex justify-center items-center border-2 border-gray-300 border-dashed rounded-2xl py-4 md:py-8">
               <input {...getInputProps()} />

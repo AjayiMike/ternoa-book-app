@@ -51,7 +51,7 @@ const EditBook = () => {
   const [processing, setProcessing] = useState<boolean>(false)
   const [error, setError] = useState<{statusCode: number | null, isError:boolean}>({statusCode: null, isError: false})
 
-    const init = async () => {
+    const init = useCallback(async () => {
         if(!active || !account) {
              toast('Wallet not connected');
              return router.push("/")
@@ -82,11 +82,11 @@ const EditBook = () => {
                 statusCode: 500
             })
         }
-    };
+    }, [active, account, ]);
     useEffect(() => {
         if (!id) return;
         init();
-    }, [id]);
+    }, [id, init]);
 
     useEffect(() => {
         if (isDragActive) return setImageAreaText("Drop the file here ...");
@@ -149,6 +149,7 @@ const EditBook = () => {
                             src={seletedImagePreviewSrc}
                             width={80}
                             height={100}
+                            alt = "Seleted book cover"
                         />
                     ) : (
                         <div className="">

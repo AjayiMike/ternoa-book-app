@@ -38,7 +38,7 @@ const Home: NextPage<Props> = ({books}) => {
 
       const bookToBeDeleted = books.find(book => book._id === idTobeDeleted);
       setBookTitleToBeDeleted(() => bookToBeDeleted!.title)
-    }, [idTobeDeleted])
+    }, [idTobeDeleted, books])
 
 
     const deleteBook = useCallback(async () => {
@@ -63,7 +63,7 @@ const Home: NextPage<Props> = ({books}) => {
         }
         
         
-    }, [idTobeDeleted, bookTitleToBeDeleted])    
+    }, [idTobeDeleted, bookTitleToBeDeleted, bookState])    
 
     useEffect(() => {
       if(!active || !account) return setMyBooks(null)

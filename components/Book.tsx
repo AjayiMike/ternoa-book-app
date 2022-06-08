@@ -27,6 +27,7 @@ const Book: FC<Props> = ({
                     src={`https://gateway.ipfs.io/ipfs/${coverImageIpfsPath}`}
                     layout="fill"
                     className="rounded"
+                    alt = "book cover"
                 />
             </div>
             <div className="col-span-7 lg:col-span-8">
