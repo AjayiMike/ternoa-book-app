@@ -2,6 +2,8 @@ import {
     FC,
     Fragment,
     ReactNode,
+    useCallback,
+    useEffect,
     useState,
 } from "react";
 import ConnectModal from "./connectModal";
@@ -19,6 +21,7 @@ const Layout: FC<Props> = ({ children }) => {
     const [openWalletModal, setOpenWalletModal] = useState(false);
 
     useEagerConnect()
+    
 
     return (
         <Fragment>

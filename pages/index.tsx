@@ -1,14 +1,13 @@
 import clsx from "clsx";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Fragment, MouseEvent, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import Book from "../components/Book";
 import DeleteModal from "../components/DeleteModal";
 import { Book as BookType } from "../types/apiData";
 import { toast } from 'react-toastify';
 import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/router";
-
 interface Props {
     books: BookType[]
 }
@@ -17,7 +16,7 @@ const Home: NextPage<Props> = ({books}) => {
     const tabs = {
         myBooks: "mybooks",
         allBooks: "allbooks",
-    };
+    };    
     
     const [bookState, setBookState] = useState(books);
     const [idTobeDeleted, setIdTobeDeleted] = useState<string | null>(null)
@@ -108,7 +107,7 @@ const Home: NextPage<Props> = ({books}) => {
                         My Books
                     </button>
                 </div>
-                <div className="grid gap-4 md:grid-cols-2 mt-8 mb-16 h-[75vh] overflow-auto">
+                <div className="grid gap-4 md:grid-cols-2 mt-8 mb-16 min-h-[50vh] overflow-auto">
                     {String(tab).toLocaleLowerCase() === tabs.myBooks && (
                         myBooks?.length ? myBooks.map((book, index) => <Book key = {index} {...book} onDeleteClick = {setIdTobeDeleted} />) : <p className="text-center col-span-4 mt-8 text-xl text-gray-400">You have not created any book</p>
                     )}

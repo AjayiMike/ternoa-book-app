@@ -82,7 +82,7 @@ const EditBook = () => {
                 statusCode: 500
             })
         }
-    }, [active, account, ]);
+    }, [active, account, id, router]);
     useEffect(() => {
         if (!id) return;
         init();
@@ -92,7 +92,7 @@ const EditBook = () => {
         if (isDragActive) return setImageAreaText("Drop the file here ...");
 
         return setImageAreaText(
-            "Drag 'n' drop the book cover here, or click to select files"
+            "Drag 'n' drop the book cover here, or click to select file"
         );
     }, [isDragActive]);
 

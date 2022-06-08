@@ -15,7 +15,7 @@ const CreateBook = () => {
   const [title, setTitle] = useState<string>("")
   const [description, setdescription] = useState<string>("")
   const [seletedImagePreviewSrc, setSeletedImagePreviewSrc] = useState<any>(null)
-  const [imageAreaText, setImageAreaText] = useState("Drag 'n' drop the book cover here, or click to select files")
+  const [imageAreaText, setImageAreaText] = useState("Drag 'n' drop the book cover here, or click to select file")
   const [processing, setProcessing] = useState<boolean>(false)
     const onDrop = useCallback(async (acceptedFiles:any) => {
       const reader = new FileReader()
@@ -95,6 +95,7 @@ const CreateBook = () => {
                       src = {seletedImagePreviewSrc}
                       width = {80}
                       height = {100}
+                      alt = "Book cover preview"
                     /> : 
                     <div className="">
                       <BiImageAdd className="w-12 h-12 text-gray-400 block mx-auto" />
